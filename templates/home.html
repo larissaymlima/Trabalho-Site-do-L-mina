@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+                    <link rel="icon" href="{{ url_for('static', filename='img/favico.png') }}">
+                 <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+         <script src="{{ url_for('static', filename='js/script.js') }}" defer></script>
+                <script src="{{ url_for('static', filename='js/dark-mode.js') }}" defer></script>
+    <title>Lúmina</title>
+</head>
+<body>
+    <header class="cabeçalho">
+    <section>
+        <div class="header__brand">
+            <svg class="header__icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                <path d="M4 4.5C4 3.67 4.67 3 5.5 3H12V21H5.5C4.67 21 4 20.33 4 19.5V4.5Z" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/>
+                <path d="M20 4.5C20 3.67 19.33 3 18.5 3H12V21H18.5C19.33 21 20 20.33 20 19.5V4.5Z" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/>
+            </svg>
+            <h1 class="header__title">Lúmina</h1>
+        </div>
+        <nav class="navbar">
+            <a href="{{ url_for('home') }}#Inicío" class="nav-link">Inicío</a>
+            <a href="{{ url_for('pagina_sobre_nos') }}" class="nav-link">Sobre nós</a>
+            <a href="{{ url_for('home') }}#Acervo" class="nav-link">Em alta</a>
+            <a href="{{ url_for('catalogo') }}" class="nav-link link-catalogo">Catálogo</a>
+            <a href="{{ url_for('pagina_minhas_reservas') }}" class="nav-link link-reservas" id="minhasReservasHomeLink" hidden>Minhas Reservas</a>
+        </nav>
+        <div class="icons">
+            <div class="auth-area" id="authArea">
+                <button class="btn btn-auth" id="openAuthBtn" type="button">Entrar</button>
+            </div>
+            <button class="theme-toggle" id="btn-dark-mode" type="button" aria-label="Modo escuro">🌙</button>
+        </div>
+     </section>
+    </header>
+
+    <main class="Inicío-container" id="Inicío">
+        <div class="Inicío-content">
+            <h2>Sua biblioteca digital completa: explore nosso acervo e reserve seu próximo livro agora mesmo.</h2>
+            <p>Conectamos você aos maiores clássicos da literatura mundial e aos lançamentos mais aguardados do mercado. Com a Lúmina, você navega por um catálogo dinâmico, garante seus exemplares em instantes com total segurança e otimiza seu tempo sem encarar filas. Esqueça a burocracia: tenha uma biblioteca completa, intuitiva na palma da sua mão, pronta para acompanhar o seu ritmo onde quer que você esteja.</p>
+            <a href="{{ url_for('catalogo') }}" class="btn">Saiba Mais</a>
+        </div>
+        <div class="Inicío-imagem">
+            <img src="{{ url_for('static', filename='img/Biblioteca.jpg') }}" alt="Imagem da biblioteca">
+        </div>
+    </main>
+
+    <section class="Sobre-nos" id="Sobre-nos">
+        <h2 class="Title">Sobre<span> nós</span></h2>
+        <div class="row">
+          <div class="Sobre-nos-imagem">
+            <img src="{{ url_for('static', filename='img/Lúmina.png') }}" alt="Imagem de livros">
+          </div>
+          <div class="content">
+            <h3>Bem vindo a sua biblioteca digital</h3>
+            <p>Somos mais do que um sistema de reservas: somos um ponto de encontro para quem ama a leitura. A Lúmina unifica praticidade e tecnologia para que você possa explorar catálogos, descobrir novos títulos e garantir seus exemplares com rapidez. Nosso compromisso é transformar a experiência de frequentar a biblioteca em algo ágil, acolhedor e totalmente adaptado à sua rotina.</p>
+            <a href="{{ url_for('catalogo') }}" class="btn">Ver Catálogo</a>
+          </div>
+        </div>
+    </section>
+
+    <section class="acervo" id="Acervo">
+        <h2 class="Title">Catálogos <span>em alta</span></h2>
+        <div class="box-container" id="catalogosEmAlta">
+            <p class="catalogos-loading">Carregando os catálogos mais reservados...</p>
+        </div>
+    </section>
+
+    <section class="Review" id="Review">
+        <h2 class="Title"><span>Nossos </span>Clientes</h2>
+        <div class="box-container">
+            <div class="box">
+                <img class="quote-icon" src="{{ url_for('static', filename='img/icons8-quote-50.png') }}" alt="quote">
+                <p>Experiência incrível e super rápida!
+Facilitou demais a minha rotina de leitura. Consegui buscar a categoria de Tecnologia, encontrar o livro que precisava e fazer a reserva em menos de dois minutos. Interface limpa, intuitiva e sem burocracia. Nota dez!.</p>
+                <img class="avatar" src="{{ url_for('static', filename='img/pessoa1.png') }}" alt="foto-cliente">
+                <h3>Carlos da Silva</h3>
+                <div class="stars">
+                    <img width="30" height="30" src="https://img.icons8.com/fluency-systems-filled/48/star.png" alt="star"/>
+                    <img width="30" height="30" src="https://img.icons8.com/fluency-systems-filled/48/star.png" alt="star"/>
+                    <img width="30" height="30" src="https://img.icons8.com/fluency-systems-filled/48/star.png" alt="star"/>
+                    <img width="30" height="30" src="https://img.icons8.com/fluency-systems-filled/48/star.png" alt="star"/>
+                    <img width="30" height="30" src="https://img.icons8.com/fluency-systems-filled/48/star.png" alt="star"/>
+                </div>
+            </div>
+            <div class="box">
+                <img class="quote-icon" src="{{ url_for('static', filename='img/icons8-quote-50.png') }}" alt="quote">
+                <p>Catálogo excelente e muito prático.
+ plataforma é excelente e o visual do acervo facilita muito na hora de escolher o próximo livro. A reserva online funciona perfeitamente! Só não dou 5 estrelas completas porque gostaria de ver ainda mais títulos na área de suspense, mas a experiência geral é fantástica.</p>
+                <img class="avatar" src="{{ url_for('static', filename='img/pessoa2.jpg') }}" alt="foto-cliente">
+                <h3>Rafael Assunção</h3>
+                <div class="stars">
+                    <img width="30" height="30" src="https://img.icons8.com/fluency-systems-filled/48/star.png" alt="star"/>
+                    <img width="30" height="30" src="https://img.icons8.com/fluency-systems-filled/48/star.png" alt="star"/>
+                    <img width="30" height="30" src="https://img.icons8.com/fluency-systems-filled/48/star.png" alt="star"/>
+                    <img width="30" height="30" src="https://img.icons8.com/fluency-systems-filled/48/star.png" alt="star"/>
+                    <img width="30" height="30" src="https://img.icons8.com/fluency-systems-filled/48/star-half-empty.png" alt="star-half-empty"/>
+                </div>
+            </div>
+            <div class="box">
+                <img class="quote-icon" src="{{ url_for('static', filename='img/icons8-quote-50.png') }}" alt="quote">
+                <p>Muito bom para organizar as leituras!
+O site é lindo, rápido e cumpre exatamente o que promete. A navegação pelas categorias em boxes ficou ótima e economiza bastante tempo no dia a dia. Recomendo muito para quem gosta de praticidade na hora de ler!.</p>
+                <img class="avatar" src="{{ url_for('static', filename='img/pessoa3.jpg') }}" alt="foto-cliente">
+                <h3>Marcos Alonso</h3>
+                <div class="stars">
+                    <img width="30" height="30" src="https://img.icons8.com/fluency-systems-filled/48/star.png" alt="star"/>
+                    <img width="30" height="30" src="https://img.icons8.com/fluency-systems-filled/48/star.png" alt="star"/>
+                    <img width="30" height="30" src="https://img.icons8.com/fluency-systems-filled/48/star.png" alt="star"/>
+                    <img width="30" height="30" src="https://img.icons8.com/fluency-systems-filled/48/star.png" alt="star"/>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <footer class="footer">
+        <div class="share">
+            <img src="{{ url_for('static', filename='img/facebook.png') }}" alt="facebook">
+            <img src="{{ url_for('static', filename='img/instagram.png') }}" alt="instagram">
+            <img src="{{ url_for('static', filename='img/github.gif') }}" alt="github">
+            <img src="{{ url_for('static', filename='img/whatsaap.png') }}" alt="whatsapp">
+        </div>
+        <p>@ 2026 Lúmina Todos os direitos reservados.</p>
+    </footer>
+
+    <div class="modal-overlay" id="authModal">
+        <div class="modal-box">
+            <button class="modal-close" id="closeAuthModal" type="button" aria-label="Fechar">&times;</button>
+
+            <div class="modal-tabs">
+                <button type="button" class="tab-btn active" data-tab="login">Entrar</button>
+                <button type="button" class="tab-btn" data-tab="cadastro">Criar conta</button>
+            </div>
+
+            <section class="auth-choice" id="authChoice" hidden>
+                <div class="auth-choice__icon" aria-hidden="true">📚</div>
+                <h2>Entre para reservar seu livro</h2>
+                <p>Faça login ou crie sua conta gratuitamente para guardar este livro na sua lista de reservas.</p>
+                <div class="auth-choice__actions">
+                    <button type="button" class="catalog-auth-submit" id="chooseLoginBtn">Fazer login</button>
+                    <button type="button" class="auth-choice__secondary" id="chooseSignupBtn">Criar Conta</button>
+                </div>
+            </section>
+
+            <form id="loginForm" class="auth-form">
+                <label for="loginEmail">Email</label>
+                <input type="email" id="loginEmail" placeholder="seuemail@exemplo.com" required>
+
+                <label for="loginSenha">Senha</label>
+                <input type="password" id="loginSenha" placeholder="Sua senha" required>
+
+                <button type="submit" class="catalog-auth-submit">Entrar</button>
+                <p class="auth-msg" id="loginMsg"></p>
+            </form>
+
+            <form id="cadastroForm" class="auth-form" hidden>
+                <label for="cadUsuario">Nome de usuário</label>
+                <input type="text" id="cadUsuario" placeholder="Como devemos te chamar?" required>
+
+                <label for="cadEmail">Email</label>
+                <input type="email" id="cadEmail" placeholder="seuemail@exemplo.com" required>
+
+                <label for="cadTelefone">Telefone</label>
+                <input type="tel" id="cadTelefone" placeholder="(00) 00000-0000" required>
+
+                <label for="cadSenha">Senha</label>
+                <input type="password" id="cadSenha" placeholder="Mínimo de 6 caracteres" minlength="6" required>
+
+                <label>Escolha um avatar ou uma foto de perfil</label>
+                <div class="avatar-picker" id="avatarPicker">
+                    <img class="avatar-option" data-avatar="https://api.dicebear.com/9.x/notionists/svg?seed=Aurora" src="https://api.dicebear.com/9.x/notionists/svg?seed=Aurora" alt="Avatar Aurora">
+                    <img class="avatar-option" data-avatar="https://api.dicebear.com/9.x/notionists/svg?seed=Sol" src="https://api.dicebear.com/9.x/notionists/svg?seed=Sol" alt="Avatar Sol">
+                    <img class="avatar-option" data-avatar="https://api.dicebear.com/9.x/notionists/svg?seed=Lua" src="https://api.dicebear.com/9.x/notionists/svg?seed=Lua" alt="Avatar Lua">
+                    <img class="avatar-option" data-avatar="https://api.dicebear.com/9.x/notionists/svg?seed=Estrela" src="https://api.dicebear.com/9.x/notionists/svg?seed=Estrela" alt="Avatar Estrela">
+                    <label class="avatar-option avatar-upload" id="avatarUploadLabel">
+                        <span>+</span>
+                        <input type="file" id="avatarUpload" accept="image/*" hidden>
+                    </label>
+                </div>
+                <input type="hidden" id="cadFoto" value="">
+
+                <label class="lgpd-consent">
+                    <input type="checkbox" id="cadConsentimento" required>
+                    Aceito o uso dos meus dados para criar minha conta.
+                    <a href="{{ url_for('static', filename='docs/termo-de-consentimento.pdf') }}" target="_blank">
+  Ler Termo de Consentimento
+</a>
+                </label>
+
+                <button type="submit" class="catalog-auth-submit">Criar conta</button>
+                <p class="auth-msg" id="cadMsg"></p>
+            </form>
+        </div>
+    </div>
+</body>
+</html>
+

@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="icon" href="{{ url_for('static', filename='img/favico.png') }}">
+<link rel="stylesheet" href="{{ url_for('static', filename='css/catalogo.css') }}">
+<script src="{{ url_for('static', filename='js/catálogo.js') }}" defer></script>
+<script src="{{ url_for('static', filename='js/script.js') }}" defer></script>
+<script src="{{ url_for('static', filename='js/dark-mode.js') }}" defer></script>
+
+<title>Lúmina</title>
+</head>
+<body data-pagina="catalogo">
+
+  <!-- ===================== HEADER ===================== -->
+  <header class="header">
+    <div class="header__brand">
+      <svg class="header__icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+        <path d="M4 4.5C4 3.67 4.67 3 5.5 3H12V21H5.5C4.67 21 4 20.33 4 19.5V4.5Z" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/>
+        <path d="M20 4.5C20 3.67 19.33 3 18.5 3H12V21H18.5C19.33 21 20 20.33 20 19.5V4.5Z" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/>
+      </svg>
+      <span class="header__title">Lúmina</span>
+    </div>
+    <nav class="header__nav">
+      <a href="{{ url_for('home') }}" class="nav-link link-home">Início</a>
+      <a href="{{ url_for('pagina_sobre_nos') }}" class="nav-link header__link">Sobre nós</a>
+      <a href="{{ url_for('home') }}#Acervo" class="nav-link header__link">Em alta</a>
+      <a href="{{ url_for('catalogo') }}" class="nav-link header__link">Catálogo</a>
+      <a href="{{ url_for('pagina_minhas_reservas') }}" class="nav-link header__link" id="minhasReservasLink" hidden>Minhas Reservas</a>
+    </nav>
+    <div class="catalog-auth-area" id="authArea">
+      <button class="catalog-auth-button" id="openAuthBtn" type="button">Entrar</button>
+      <button class="theme-toggle" id="btn-dark-mode" type="button" aria-label="Modo escuro">🌙</button>
+    </div>
+    <button class="header__burger" id="burgerBtn" aria-label="Abrir menu">
+      <span></span><span></span><span></span>
+    </button>
+  </header>
+
+  <main class="container">
+
+    <section class="card card--reservas" id="minhas-reservas" data-view="reservas" hidden>
+      <h1 class="card__title">Minhas Reservas</h1>
+      <div class="avisos-leitor" id="avisosLeitor" role="status" aria-live="polite"></div>
+      <p id="reservasMensagem">Carregando suas reservas...</p>
+      <div class="reservas-lista" id="reservasLista"></div>
+      <h2 class="card__subtitle">Meus empréstimos</h2>
+      <p id="emprestimosMensagem">Carregando seus empréstimos...</p>
+      <div class="reservas-lista" id="emprestimosLista"></div>
+      <h2 class="card__subtitle">Livros devolvidos</h2>
+      <p id="devolvidosMensagem">Carregando livros devolvidos...</p>
+      <div class="reservas-lista" id="devolvidosLista"></div>
+    </section>
+    <section class="catalog-about" id="Sobre-nos" data-view="sobre-nos" hidden>
+      <div class="catalog-about__image">
+        <img src="{{ url_for('static', filename='img/Lúmina.png') }}" alt="Imagem de livros">
+      </div>
+      <div class="catalog-about__content">
+        <h1>Sobre nós</h1>
+        <h2>Bem-vindo à sua biblioteca digital</h2>
+        <p>Somos mais do que um sistema de reservas: somos um ponto de encontro para quem ama a leitura. A Lúmina unifica praticidade e tecnologia para você explorar catálogos, descobrir novos títulos e garantir seus exemplares com rapidez. Nosso espaço foi pensado para tornar cada visita mais acolhedora, simples e especial.</p>
+        <div class="catalog-about__details">
+          <div><strong>Endereço</strong><span>Rua das Letras, 125 · Centro</span><span>Belo Horizonte · MG</span></div>
+          <div><strong>Horário de funcionamento</strong><span>Segunda a sexta: 8h às 18h</span><span>Sábado: 9h às 13h</span></div>
+          <div><strong>Fale conosco</strong><span>(31) 97232-1537</span><span>lúmina_oficia@lgmail.com</span></div>
+        </div>
+        <a href="{{ url_for('catalogo') }}" class="btn">Explorar catálogo</a>
+      </div>
+    </section>
+    <div data-view="catalogo">
+    <!-- ===================== FILTROS ===================== -->
+    <section class="card card--filters">
+      <h1 class="card__title">Encontre seu próximo livro</h1>
+      <div class="filters">
+        <div class="field field--search">
+          <label class="field__label" for="buscaInput">Título ou autor</label>
+          <div class="field__control">
+            <svg class="field__icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <circle cx="11" cy="11" r="7" stroke="currentColor" stroke-width="1.8"/>
+              <path d="M21 21L16.65 16.65" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
+            </svg>
+            <input type="text" id="buscaInput" placeholder="Digite o que procura...">
+          </div>
+        </div>
+         
+        <div class="field">
+          <label class="field__label" for="categoriaSelect">Categoria</label>
+          <select id="categoriaSelect" class="field__select">
+            <option value="">Todas as categorias</option>
+          </select>
+        </div>
+
+        <div class="field">
+          <label class="field__label" for="disponibilidadeSelect">Disponibilidade</label>
+          <select id="disponibilidadeSelect" class="field__select field__select--highlight">
+            <option value="">Todos</option>
+            <option value="disponivel">Disponível</option>
+            <option value="indisponivel">Indisponível</option>
+          </select>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===================== ACERVO COMPLETO ===================== -->
+    <section class="card card--acervo" id="acervo">
+      <h2 class="card__title">Acervo Completo</h2>
+
+      <div class="book-grid" id="acervoBody" aria-live="polite"></div>
+
+      <div class="pagination">
+        <span class="pagination__info" id="paginationInfo">Mostrando 1 a 10 de 70 resultados</span>
+        <div class="pagination__controls" id="paginationControls"></div>
+      </div>
+    </section>
+
+    <section class="livro-detalhes" id="livroDetalhes" hidden aria-labelledby="livroDetalhesTitulo">
+      <div class="livro-detalhes__barra">
+        <button class="livro-detalhes__voltar" id="fecharDetalhesLivro" type="button">Voltar ao catálogo</button>
+      </div>
+      <div class="livro-detalhes__conteudo">
+        <div class="livro-detalhes__capa">
+          <img id="livroDetalhesCapa" src="" alt="">
+        </div>
+        <div class="livro-detalhes__texto">
+          <p class="livro-detalhes__categoria" id="livroDetalhesCategoria"></p>
+          <h1 id="livroDetalhesTitulo"></h1>
+          <p class="livro-detalhes__autor" id="livroDetalhesAutor"></p>
+          <div class="livro-detalhes__avaliacao" id="livroDetalhesAvaliacao"></div>
+          <p class="livro-detalhes__sinopse" id="livroDetalhesSinopse"></p>
+          <p class="livro-detalhes__estoque" id="livroDetalhesEstoque"></p>
+          <button class="btn" id="reservarDetalhesLivro" type="button">Reservar livro</button>
+          <div class="avisos-leitor" id="reservaMensagem" role="status" aria-live="polite" hidden></div>
+        </div>
+      </div>
+      <section class="livro-detalhes__avaliacoes" aria-labelledby="avaliacoesTitulo">
+        <div class="livro-detalhes__avaliacoes-header">
+          <h2 id="avaliacoesTitulo">Avaliações dos leitores</h2>
+          <button class="btn btn-sm" id="escreverAvaliacao" type="button" hidden>Escrever avaliação</button>
+        </div>
+        <div class="avaliacao-form" id="avaliacaoForm" hidden>
+          <span id="avaliacaoNotaLabel">Escolha sua nota</span>
+          <div class="avaliacao-estrelas" id="avaliacaoNota" role="radiogroup" aria-labelledby="avaliacaoNotaLabel">
+            <button type="button" class="estrela-nota" data-nota="1" role="radio" aria-label="1 estrela" aria-checked="false">★</button>
+            <button type="button" class="estrela-nota" data-nota="2" role="radio" aria-label="2 estrelas" aria-checked="false">★</button>
+            <button type="button" class="estrela-nota" data-nota="3" role="radio" aria-label="3 estrelas" aria-checked="false">★</button>
+            <button type="button" class="estrela-nota" data-nota="4" role="radio" aria-label="4 estrelas" aria-checked="false">★</button>
+            <button type="button" class="estrela-nota" data-nota="5" role="radio" aria-label="5 estrelas" aria-checked="false">★</button>
+          </div>
+          <label for="avaliacaoComentario">Comentário</label>
+          <textarea id="avaliacaoComentario" rows="4" maxlength="1000" placeholder="Conte o que achou da leitura"></textarea>
+          <button class="btn btn-sm" id="enviarAvaliacao" type="button">Publicar avaliação</button>
+        </div>
+        <p class="avaliacoes-mensagem" id="avaliacoesMensagem">Carregando avaliações...</p>
+        <div class="avaliacoes-lista" id="avaliacoesLista"></div>
+      </section>
+    </section>
+    </div>
+
+  </main>
+
+  <div class="toast" id="toast"></div>
+
+  <script src="{{ url_for('static', filename='js/reservas.js') }}" defer></script>
+
+  <script>
+    const pagina = new URLSearchParams(window.location.search).get("pagina") ||
+      (window.location.hash === "#Sobre-nos" ? "sobre-nos" : "catalogo");
+    document.body.dataset.pagina = pagina;
+    document.querySelectorAll("[data-view]").forEach((view) => {
+      const ativo = view.dataset.view === pagina;
+      view.hidden = !ativo;
+      view.style.display = ativo ? "" : "none";
+    });
+  </script>
+
+  <div class="modal-overlay" id="authModal">
+    <div class="modal-box">
+      <button class="modal-close" id="closeAuthModal" type="button" aria-label="Fechar">&times;</button>
+      <div class="modal-tabs">
+        <button type="button" class="tab-btn active" data-tab="login">Entrar</button>
+        <button type="button" class="tab-btn" data-tab="cadastro">Criar conta</button>
+      </div>
+      <section class="auth-choice" id="authChoice" hidden>
+        <div class="auth-choice__icon" aria-hidden="true">📚</div>
+        <h2>Entre para reservar seu livro</h2>
+        <p>Faça login ou crie sua conta gratuitamente para guardar este livro na sua lista de reservas.</p>
+        <div class="auth-choice__actions">
+          <button type="button" class="catalog-auth-submit" id="chooseLoginBtn">Fazer login</button>
+          <button type="button" class="auth-choice__secondary" id="chooseSignupBtn">Criar Conta</button>
+        </div>
+        </section>
+
+            <form id="loginForm" class="auth-form">
+                <label for="loginEmail">Email</label>
+                <input type="email" id="loginEmail" placeholder="seuemail@exemplo.com" required>
+
+                <label for="loginSenha">Senha</label>
+                <input type="password" id="loginSenha" placeholder="Sua senha" required>
+
+                <button type="submit" class="catalog-auth-submit">Entrar</button>
+                <p class="auth-msg" id="loginMsg"></p>
+            </form>
+
+            <form id="cadastroForm" class="auth-form" hidden>
+                <label for="cadUsuario">Nome de usuário</label>
+                <input type="text" id="cadUsuario" placeholder="Como devemos te chamar?" required>
+
+                <label for="cadEmail">Email</label>
+                <input type="email" id="cadEmail" placeholder="seuemail@exemplo.com" required>
+
+                <label for="cadTelefone">Telefone</label>
+                <input type="tel" id="cadTelefone" placeholder="(00) 00000-0000" required>
+
+                <label for="cadSenha">Senha</label>
+                <input type="password" id="cadSenha" placeholder="Mínimo de 6 caracteres" minlength="6" required>
+
+                <label>Escolha um avatar ou uma foto de perfil</label>
+                <div class="avatar-picker" id="avatarPicker">
+                    <img class="avatar-option" data-avatar="https://api.dicebear.com/9.x/notionists/svg?seed=Aurora" src="https://api.dicebear.com/9.x/notionists/svg?seed=Aurora" alt="Avatar Aurora">
+                    <img class="avatar-option" data-avatar="https://api.dicebear.com/9.x/notionists/svg?seed=Sol" src="https://api.dicebear.com/9.x/notionists/svg?seed=Sol" alt="Avatar Sol">
+                    <img class="avatar-option" data-avatar="https://api.dicebear.com/9.x/notionists/svg?seed=Lua" src="https://api.dicebear.com/9.x/notionists/svg?seed=Lua" alt="Avatar Lua">
+                    <img class="avatar-option" data-avatar="https://api.dicebear.com/9.x/notionists/svg?seed=Estrela" src="https://api.dicebear.com/9.x/notionists/svg?seed=Estrela" alt="Avatar Estrela">
+                    <label class="avatar-option avatar-upload" id="avatarUploadLabel">
+                        <span>+</span>
+                        <input type="file" id="avatarUpload" accept="image/*" hidden>
+                    </label>
+                </div>
+                <input type="hidden" id="cadFoto" value="">
+
+                <label class="lgpd-consent">
+                    <input type="checkbox" id="cadConsentimento" required>
+                    Aceito o uso dos meus dados para criar minha conta.
+                    <a href="{{ url_for('static', filename='docs/termo-de-consentimento.pdf') }}" target="_blank">
+  Ler Termo de Consentimento
+</a>
+                </label>
+
+                <button type="submit" class="catalog-auth-submit">Criar conta</button>
+                <p class="auth-msg" id="cadMsg"></p>
+            </form>
+        </div>
+    </div>
+  </div>
+
+</body>
+</html>

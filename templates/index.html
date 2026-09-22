@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lúmina - Gestão</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/gestor.css') }}">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="{{ url_for('static', filename='js/dark-mode.js') }}" defer></script>
+</head>
+<body>
+
+    <header>
+        <section>
+            <div class="header__brand">
+                <svg class="header__icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                    <path d="M4 4.5C4 3.67 4.67 3 5.5 3H12V21H5.5C4.67 21 4 20.33 4 19.5V4.5Z" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/>
+                    <path d="M20 4.5C20 3.67 19.33 3 18.5 3H12V21H18.5C19.33 21 20 20.33 20 19.5V4.5Z" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/>
+                </svg>
+                <h1 class="header__title">Lúmina - Painel Administrativo</h1>
+            </div>
+            <nav class="gestor-nav" aria-label="Navegação principal">
+                <a href="{{ url_for('home') }}" class="nav-link">Início</a>
+                <a href="{{ url_for('pagina_sobre_nos') }}" class="nav-link">Sobre nós</a>
+                <a href="{{ url_for('home') }}#Acervo" class="nav-link">Em alta</a>
+                <a href="{{ url_for('catalogo') }}" class="nav-link">Catálogo</a>
+                <a href="{{ url_for('pagina_minhas_reservas') }}" class="nav-link" id="minhasReservasGestorLink" hidden>Minhas Reservas</a>
+            </nav>
+            <div class="header-actions">
+                <button class="user-chip" type="button" onclick="abrirMenuPerfil()">
+                    <img src="https://api.dicebear.com/7.x/avataaars/svg?seed=Bibliotech" alt="Perfil">
+                    <span>Usuário</span>
+                    <span class="logout-x">×</span>
+                </button>
+                <button class="theme-toggle" id="btn-dark-mode" type="button" aria-label="Modo escuro">🌙</button>
+            </div>
+        </section>
+    </header>
+
+    <aside class="profile-drawer" id="profileDrawer" aria-label="Meu perfil">
+        <div class="profile-drawer__header">
+            <strong>Meu perfil</strong>
+            <button type="button" class="profile-drawer__close" onclick="fecharMenuPerfil()" aria-label="Fechar">&times;</button>
+        </div>
+        <p class="profile-drawer__user">usuario@exemplo.com</p>
+        <button type="button" class="profile-drawer__action" onclick="abrirEdicaoPerfil()">Editar perfil</button>
+        <form class="profile-edit-form" id="form-meus-dados" hidden onsubmit="salvarMeusDados(event)">
+            <p class="profile-drawer__notice" id="perfil-aviso-permissao">Nome, cargo e status só podem ser alterados pelo bibliotecário.</p>
+            <label for="meu-nome">Nome</label>
+            <input id="meu-nome" type="text" value="Usuário" data-readonly-aux required>
+            <label for="meu-cargo">Cargo</label>
+            <input id="meu-cargo" type="text" value="Bibliotecário" data-id-cargo="" data-readonly-aux required>
+            <label for="meu-status">Status</label>
+            <input id="meu-status" type="text" value="Ativo" data-readonly-aux required>
+            <label for="meu-email">E-mail</label>
+            <input id="meu-email" type="email" value="usuario@exemplo.com" required>
+            <label for="meu-telefone">Telefone</label>
+            <input id="meu-telefone" type="tel" value="" required>
+            <label for="minha-foto">Foto de perfil</label>
+            <input id="minha-foto" type="file" accept="image/png,image/jpeg,image/webp">
+            <button type="button" class="profile-drawer__action profile-drawer__action--password" id="btn-alterar-senha" onclick="alternarAlteracaoSenha()">Alterar senha</button>
+            <div class="senha-opcional" id="senha-opcional" hidden>
+                <label for="senha-atual">Senha atual</label>
+                <input id="senha-atual" type="password" autocomplete="current-password">
+                <label for="nova-senha">Nova senha</label>
+                <input id="nova-senha" type="password" minlength="6" autocomplete="new-password">
+            </div>
+            <button type="submit" class="profile-drawer__action">Salvar alterações</button>
+            <p class="profile-drawer__message" id="perfil-mensagem"></p>
+        </form>
+        <button type="button" class="profile-drawer__action profile-drawer__action--exit" onclick="sairDoGestor()">Sair</button>
+    </aside>
+
+    <!-- Indicadores (Visualização de leitores) -->
+    <div class="dashboard">
+        <div class="card">
+            <h3>Leitores Cadastrados</h3>
+            <p id="total-leitores">0</p>
+        </div>
+        <div class="card">
+            <h3>Empréstimos Ativos</h3>
+            <p id="total-emprestimos">0</p>
+        </div>
+        <div class="card">
+            <h3>Funcionários</h3>
+            <p id="total-funcionarios">0</p>
+        </div>
+        <button class="card card-action" type="button" onclick="abrirAbaPorId('livros')">
+            <h3>Gerenciar Livros</h3>
+            <p id="total-livros">0</p>
+            <span>Abrir acervo</span>
+        </button>
+    </div>
+
+    <section class="dashboard-chart">
+        <div class="graficos-grid">
+            <div class="grafico-bloco">
+                <h2>Empréstimos por status</h2>
+                <canvas id="grafico-status" aria-label="Gráfico de livros a vencer e atrasados"></canvas>
+            </div>
+            <div class="grafico-bloco">
+                <h2>Acervo e empréstimos</h2>
+                <canvas id="grafico-resumo" aria-label="Gráfico de pizza do acervo e empréstimos"></canvas>
+            </div>
+        </div>
+        <p id="grafico-vazio" class="hidden">Ainda não há dados suficientes para exibir os gráficos.</p>
+    </section>
+
+    <!-- Navegação por Abas -->
+    <div class="tabs">
+        <button class="tab-button active" onclick="abrirAba(event, 'emprestimos')">Empréstimos / Devoluções</button>
+        <button class="tab-button" id="aba-funcionarios" onclick="abrirAba(event, 'funcionarios')">Gerenciar Funcionários</button>
+        <button class="tab-button" onclick="abrirAba(event, 'livros')">Gerenciar Livros</button>
+        <button class="tab-button" onclick="abrirAba(event, 'livros-excluidos')">Livros excluídos</button>
+    </div>
+
+    <!-- Aba 1: Empréstimos e Devoluções -->
+    <div id="emprestimos" class="tab-content active">
+        <div class="operacao-escolha" id="operacao-escolha">
+            <h2>O que deseja fazer?</h2>
+            <div class="operacao-acoes">
+                <button type="button" class="btn" onclick="mostrarOperacao('registrar')">Registrar empréstimo</button>
+                <button type="button" class="btn btn-warning" onclick="mostrarOperacao('devolver')">Devolver livro</button>
+            </div>
+        </div>
+
+        <section class="operacao-secao" id="secao-registrar" hidden>
+            <button type="button" class="btn btn-voltar" onclick="voltarEscolha()">Voltar</button>
+            <h2>Registrar Empréstimo</h2>
+            <form id="form-emprestimo" onsubmit="salvarEmprestimo(event)">
+                <div class="form-group">
+                    <label for="emp-leitor-nome">Leitor:</label>
+                    <select id="emp-leitor-nome" required><option value="">Selecione o leitor</option></select>
+                    <input type="hidden" id="emp-leitor-id">
+                </div>
+                <div class="form-group">
+                    <label for="emp-livro-nome">Livro:</label>
+                    <select id="emp-livro-nome" required><option value="">Selecione o livro</option></select>
+                    <input type="hidden" id="emp-livro-id">
+                </div>
+                <button type="submit" class="btn">Registrar Empréstimo</button>
+            </form>
+        </section>
+
+        <section class="operacao-secao" id="secao-devolver" hidden>
+            <button type="button" class="btn btn-voltar" onclick="voltarEscolha()">Voltar</button>
+            <h2>Devolver livro</h2>
+            <div class="busca-devolucao">
+                <label for="busca-emprestimos">Pesquisar por título do livro ou nome do leitor:</label>
+                <input type="search" id="busca-emprestimos" placeholder="Digite o título ou nome" oninput="filtrarEmprestimos()">
+            </div>
+            <h2 class="subtitulo">Histórico de Empréstimos</h2>
+            <table>
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Leitor</th>
+                    <th>Livro</th>
+                    <th>Data</th>
+                    <th>Status</th>
+                    <th>Ação</th>
+                </tr>
+            </thead>
+            <tbody id="tabela-emprestimos">
+                <!-- Conteúdo preenchido dinamicamente via JS -->
+            </tbody>
+            </table>
+            <div class="paginacao" id="paginacao-emprestimos"></div>
+        </section>
+    </div>
+
+    <!-- Aba 2: CRUD de Funcionários -->
+    <div id="funcionarios" class="tab-content" data-admin-only>
+        <h2 id="titulo-form-func">Cadastrar Funcionário</h2>
+        <form id="form-funcionario" onsubmit="salvarFuncionario(event)">
+            <input type="hidden" id="func-id">
+            <div class="form-group">
+                <label for="func-nome">Nome:</label>
+                <input type="text" id="func-nome" required>
+            </div>
+            <div class="form-group">
+                <label for="func-email">Email:</label>
+                <input type="email" id="func-email" required>
+            </div>
+            <div class="form-group">
+                <label for="func-telefone">Telefone:</label>
+                <input type="tel" id="func-telefone" maxlength="15" placeholder="(00) 00000-0000" required>
+            </div>
+            <div class="form-group">
+                <label for="func-cargo">ID do cargo:</label>
+                <input type="number" id="func-cargo" min="1" required>
+            </div>
+            <div class="form-group" id="grupo-senha-func">
+                <label for="func-senha">Senha:</label>
+                <input type="password" id="func-senha" minlength="6" required>
+            </div>
+            <button type="submit" class="btn" id="btn-salvar-func">Cadastrar</button>
+            <button type="button" class="btn btn-danger hidden" onclick="limparFormularioFuncionario()" id="btn-cancelar-func">Cancelar</button>
+        </form>
+
+        <h2 class="subtitulo">Lista de Funcionários</h2>
+        <table>
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Nome</th>
+                    <th>Cargo</th>
+                    <th>Email</th>
+                    <th>Telefone</th>
+                    <th>Ações</th>
+                </tr>
+            </thead>
+            <tbody id="tabela-funcionarios">
+                <!-- Conteúdo preenchido dinamicamente via JS -->
+            </tbody>
+        </table>
+    </div>
+
+    <div id="livros" class="tab-content">
+        <section id="area-acervo">
+            <div class="acervo-cabecalho">
+                <div>
+                    <h2>Acervo ativo</h2>
+                    <p>Pesquise e consulte os livros cadastrados.</p>
+                </div>
+                <button type="button" class="btn" onclick="abrirCadastroLivro()">Cadastrar livro</button>
+            </div>
+            <div class="busca-acervo">
+                <label for="busca-livros">Pesquisar por nome, autor ou ID:</label>
+                <input type="search" id="busca-livros" placeholder="Digite o título, autor ou ID" oninput="filtrarLivros()">
+            </div>
+            <table><thead><tr><th>ID</th><th>Título</th><th>Autor</th><th>Categoria</th><th>Estoque</th><th>Status</th><th>Ações</th></tr></thead><tbody id="tabela-livros"></tbody></table>
+            <div class="paginacao" id="paginacao-livros"></div>
+        </section>
+        <section id="area-cadastro-livro" hidden>
+            <button type="button" class="btn btn-voltar" onclick="voltarAcervo()">Voltar ao acervo</button>
+            <h2 id="titulo-cadastro-livro">Cadastrar Livro</h2>
+            <form id="form-livro" onsubmit="salvarLivro(event)">
+                <input type="hidden" id="livro-id">
+                <div class="form-grid">
+                    <div class="form-group"><label for="livro-titulo">Título:</label><input type="text" id="livro-titulo" required></div>
+                    <div class="form-group"><label for="livro-autor">Autor:</label><input type="text" id="livro-autor" required></div>
+                    <div class="form-group"><label for="livro-ano">Ano:</label><input type="number" id="livro-ano"></div>
+                    <div class="form-group"><label for="livro-estoque">Estoque:</label><input type="number" id="livro-estoque" min="1" value="1" required></div>
+                    <div class="form-group"><label for="livro-categoria">Categoria:</label><select id="livro-categoria" required></select></div>
+                    <div class="form-group"><label for="livro-estante">Posição na estante:</label><input type="text" id="livro-estante"></div>
+                </div>
+                <div class="form-group"><label for="livro-sinopse">Sinopse:</label><textarea id="livro-sinopse" rows="3"></textarea></div>
+                <button type="submit" class="btn" id="btn-salvar-livro">Cadastrar livro</button>
+            </form>
+        </section>
+    </div>
+
+    <div id="livros-excluidos" class="tab-content">
+        <section class="area-excluidos">
+            <div class="acervo-cabecalho">
+                <div>
+                    <h2>Livros excluídos</h2>
+                    <p>Restaure livros antigos sem precisar cadastrá-los novamente.</p>
+                </div>
+            </div>
+            <table><thead><tr><th>ID</th><th>Título</th><th>Autor</th><th>Categoria</th><th>Ações</th></tr></thead><tbody id="tabela-livros-excluidos"></tbody></table>
+        </section>
+    </div>
+
+    <script src="{{ url_for('static', filename='js/gestor.js') }}"></script>
+</body>
+</html>
